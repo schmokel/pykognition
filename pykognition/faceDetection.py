@@ -1,4 +1,6 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 """
 Created on Fri Apr 10 13:10:49 2020
 
@@ -9,19 +11,21 @@ import boto3
 import pandas as pd
 from functools import reduce
 
+from .base import BaseImageDataHandler
 
-class ImageFaceAnalysis:
+
+
+class ImageFaceAnalysis(BaseImageDataHandler):
     
     
     def __init__(self, personal_acces_key, secret_access_key):
-        self.personal_acces_key = personal_acces_key
-        self.secret_access_key = secret_access_key
+        #self.personal_acces_key = personal_acces_key
+        #self.secret_access_key = secret_access_key
+        super().__init__(personal_acces_key, secret_access_key)
         self.funcDict = {
             "emotions": self._getEmotions,
             "age": self._getAge,
             'features': self._getFeatures}
-
-
     
     
     
@@ -39,12 +43,12 @@ class ImageFaceAnalysis:
         
     def _get_response(self, inputPath, imageFile, region = 'us-east-1'):
         return self.client(region = region).detect_faces(Image={
-            'Bytes': self._open_image(inputPath, imageFile).read()}, Attributes = ['ALL'])
+            'Bytes': open(os.path.join(inputPath, imageFile), 'rb').read()}, Attributes = ['ALL'])
         
 
            
-    def _open_image(self, inputPath, imagefile):
-        return open(inputPath + imagefile, 'rb')
+  #  def _open_image(self, inputPath, imagefile):
+  #      return open(inputPath + imagefile, 'rb')
     
     
     
@@ -146,7 +150,21 @@ class ImageFaceAnalysis:
                     
         return pd.DataFrame(temp)
     
-    
+    #def _getNoImageData(self):
+    #    temp = []
+     #   for n in range(len(self.imageList)):
+     #       if len(self.response[n]) == 0:
+     #           temp_dict = {}
+     #           temp_dict["image_name"] = self.imageList[n]
+     #           temp.append(temp_dict) 
+            
+     #       else:
+     #           pass
+            
+     #   return temp
+        
+   
+
     def _getBaseData(self):
         temp = []
         
@@ -170,6 +188,7 @@ class ImageFaceAnalysis:
                     
         return pd.DataFrame(temp)
         
+        
 
 
                     
@@ -182,6 +201,10 @@ class ImageFaceAnalysis:
         return self._reduce_data(df_list = df_list, join_cols = ['image_name', 'face_id'])
 
     def _dataExtractor(self, attribute):
+        '''
+        Indsæt basedata-handler i denne del. Slet fra de enkelte extractor-funtioner. 
+        byg de andre som funktion der returnerer dict.
+        '''
         return self.funcDict[attribute]()
                 
     
@@ -197,3 +220,6 @@ class ImageFaceAnalysis:
     #    return [self._getEmotions() for image in self.imageList]
         
 
+
+class ImageObectAnalysis(self):
+    pass
