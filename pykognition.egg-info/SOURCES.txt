@@ -1,0 +1,10 @@
+README.md
+setup.py
+pykognition/__init__.py
+pykognition/base.py
+pykognition/main.py
+pykognition.egg-info/PKG-INFO
+pykognition.egg-info/SOURCES.txt
+pykognition.egg-info/dependency_links.txt
+pykognition.egg-info/requires.txt
+pykognition.egg-info/top_level.txt
