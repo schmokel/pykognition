@@ -33,7 +33,7 @@ ifa = pykog.ImageFaceAnalysis(_personal_access_key, _secret_access_key)
 
 ifa.initialize(inputPath = input_path, imageFileList = local_images)
 
-expdf = ifa.get(attributes = ['emotions'])
+expdf = ifa.get(attributes = ['emotions', features])
 #%%
 
 

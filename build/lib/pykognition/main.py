@@ -99,7 +99,7 @@ class ImageFaceAnalysis(BaseImageDataHandler):
         
         
         for n in range(len(self.imageList)):
-            if len(self.response[n]) == 0:
+            if len(self.response[n]['FaceDetails']) == 0:
                 temp_dict = {}
                 temp_dict["imageName"] = self.imageList[n]
                 temp.append(temp_dict)   
@@ -126,7 +126,7 @@ class ImageFaceAnalysis(BaseImageDataHandler):
         
         
         for n in range(len(self.imageList)):
-            if len(self.response[n]) == 0:
+            if len(self.response[n]['FaceDetails']) == 0:
                 temp_dict = {}
                 temp_dict["imageName"] = self.imageList[n]
                 temp.append(temp_dict)   
@@ -179,7 +179,7 @@ class ImageFaceAnalysis(BaseImageDataHandler):
         temp = []
         
         for n in range(len(self.imageList)):
-            if len(self.response[n]) == 0:
+            if len(self.response[n]['FaceDetails']) == 0:
                 temp_dict = {}
                 temp_dict["imageName"] = self.imageList[n]
                 temp.append(temp_dict)   
@@ -243,7 +243,7 @@ class ImageObjectAnalysis(BaseImageDataHandler):
 
         for n in range(len(self.imageList)):
         ## If no labels detected, still save the info:
-            if len(self.response[n]) == 0:
+            if len(self.response[n]['Labels']) == 0:
                 #print ("No Labels Detected")
                 temp_dict = {}
                 temp_dict["imageName"] = self.imageList[n]

@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: pykognition
-Version: 0.0.1
+Version: 0.0.5
 Summary: A python module for conviently accessing AWS Rekognition API using python
 Home-page: UNKNOWN
 Author: Rasmus H. Schmøkel
