@@ -10,6 +10,8 @@ Created on Fri Apr 10 13:10:49 2020
 import boto3
 import pandas as pd
 from functools import reduce
+import os 
+
 
 from .base import BaseImageDataHandler
 
@@ -28,33 +30,41 @@ class ImageFaceAnalysis(BaseImageDataHandler):
             'features': self._getFeatures}
     
     
-    
-    def client(self, region = 'us-east-1'):
-        return boto3.client('rekognition', region, 
-                            aws_access_key_id = self.personal_acces_key,
-                            aws_secret_access_key = self.secret_access_key)
-    
-    
+
     def initialize(self, inputPath, imageFileList, region = 'us-east-1'):
         self.imageList = imageFileList
-        self.response = [self._get_response(inputPath, image, region) for image in imageFileList]
+        self.response = [self._get_response(inputPath, image, region) for image in self.imageList]
+
+    
+    def get(self, attributes = []):
         
+        df_list = [self._dataExtractor(n) for n in attributes]
+        df_list.append(self._getBaseData())
         
+        return self._reduce_data(df_list = df_list, join_cols = ['imageName', 'faceID'])
+
         
-    def _get_response(self, inputPath, imageFile, region = 'us-east-1'):
-        return self.client(region = region).detect_faces(Image={
+    def getResponse(self):
+        #Get entire response
+        return self.response
+
+
+    
+        
+    def _get_response(self, inputPath, imageFile, region):
+        return super().client(region = region).detect_faces(Image={
             'Bytes': open(os.path.join(inputPath, imageFile), 'rb').read()}, Attributes = ['ALL'])
         
 
+   # def initialize(self, inputPath, imageFileList, region = 'us-east-1'):
+   #     return super()._initialize(inputPath = inputPath, 
+    #    imageFileList = imageFileList, region = region)
+        
            
   #  def _open_image(self, inputPath, imagefile):
   #      return open(inputPath + imagefile, 'rb')
     
     
-    
-    def getResponse(self):
-        return self.response
-
 
 
     def _getEmotions(self):
@@ -64,7 +74,7 @@ class ImageFaceAnalysis(BaseImageDataHandler):
             ## If no labels detected, still save the info:
                 if len(self.response[n]['FaceDetails']) == 0:
                     temp_dict = {}
-                    temp_dict["image_name"] = self.imageList[n]
+                    temp_dict["imageName"] = self.imageList[n]
                     holder_labels.append(temp_dict)   
                 
                 else:
@@ -74,8 +84,8 @@ class ImageFaceAnalysis(BaseImageDataHandler):
                     for label in self.response[n]['FaceDetails']:
                         
                         temp_dict = {}
-                        temp_dict["image_name"] = self.imageList[n]
-                        temp_dict["face_id"] = label_counter
+                        temp_dict["imageName"] = self.imageList[n]
+                        temp_dict["faceID"] = label_counter
                         temp_dict["Emotion"] = max(label['Emotions'], key=lambda x:x['Confidence'])['Type']
                         temp_dict['Emotion_conf'] = max(label['Emotions'], key=lambda x:x['Confidence'])['Confidence']
                         label_counter +=1 # update for the next label
@@ -91,7 +101,7 @@ class ImageFaceAnalysis(BaseImageDataHandler):
         for n in range(len(self.imageList)):
             if len(self.response[n]) == 0:
                 temp_dict = {}
-                temp_dict["image_name"] = self.imageList[n]
+                temp_dict["imageName"] = self.imageList[n]
                 temp.append(temp_dict)   
                 
             else: 
@@ -100,8 +110,8 @@ class ImageFaceAnalysis(BaseImageDataHandler):
                 
                 for label in self.response[n]['FaceDetails']:
                     temp_dict = {}
-                    temp_dict['image_name'] = self.imageList[n]
-                    temp_dict['face_id'] = label_counter
+                    temp_dict['imageName'] = self.imageList[n]
+                    temp_dict['faceID'] = label_counter
                     temp_dict['AgeRange_low'] = label['AgeRange']['Low']
                     temp_dict['AgeRange_high'] = label['AgeRange']['High']
                     label_counter += 1
@@ -118,7 +128,7 @@ class ImageFaceAnalysis(BaseImageDataHandler):
         for n in range(len(self.imageList)):
             if len(self.response[n]) == 0:
                 temp_dict = {}
-                temp_dict["image_name"] = self.imageList[n]
+                temp_dict["imageName"] = self.imageList[n]
                 temp.append(temp_dict)   
                 
             else: 
@@ -127,8 +137,8 @@ class ImageFaceAnalysis(BaseImageDataHandler):
                 
                 for label in self.response[n]['FaceDetails']:
                     temp_dict = {}
-                    temp_dict['image_name'] = self.imageList[n]
-                    temp_dict['face_id'] = label_counter
+                    temp_dict['imageName'] = self.imageList[n]
+                    temp_dict['faceID'] = label_counter
                     temp_dict['Beard'] = label['Beard']['Value']
                     temp_dict['Beard_conf'] = label['Beard']['Confidence']
                     temp_dict['Eyeglasses'] = label['Eyeglasses']['Value']
@@ -155,7 +165,7 @@ class ImageFaceAnalysis(BaseImageDataHandler):
      #   for n in range(len(self.imageList)):
      #       if len(self.response[n]) == 0:
      #           temp_dict = {}
-     #           temp_dict["image_name"] = self.imageList[n]
+     #           temp_dict["imageName"] = self.imageList[n]
      #           temp.append(temp_dict) 
             
      #       else:
@@ -171,7 +181,7 @@ class ImageFaceAnalysis(BaseImageDataHandler):
         for n in range(len(self.imageList)):
             if len(self.response[n]) == 0:
                 temp_dict = {}
-                temp_dict["image_name"] = self.imageList[n]
+                temp_dict["imageName"] = self.imageList[n]
                 temp.append(temp_dict)   
                 
             else: 
@@ -180,9 +190,9 @@ class ImageFaceAnalysis(BaseImageDataHandler):
                 
                 for label in self.response[n]['FaceDetails']:
                     temp_dict = {}
-                    temp_dict['image_name'] = self.imageList[n]
-                    temp_dict['face_id'] = label_counter
-                    temp_dict['face_conf'] = label['Confidence']
+                    temp_dict['imageName'] = self.imageList[n]
+                    temp_dict['faceID'] = label_counter
+                    temp_dict['faceConf'] = label['Confidence']
                     label_counter += 1
                     temp.append(temp_dict)
                     
@@ -190,15 +200,6 @@ class ImageFaceAnalysis(BaseImageDataHandler):
         
         
 
-
-                    
-   
-    def get(self, attributes = []):
-        
-        df_list = [self._dataExtractor(n) for n in attributes]
-        df_list.append(self._getBaseData())
-        
-        return self._reduce_data(df_list = df_list, join_cols = ['image_name', 'face_id'])
 
     def _dataExtractor(self, attribute):
         '''
@@ -221,5 +222,53 @@ class ImageFaceAnalysis(BaseImageDataHandler):
         
 
 
-class ImageObectAnalysis(self):
-    pass
+class ImageObjectAnalysis(BaseImageDataHandler):
+
+    def __init__(self, personal_acces_key, secret_access_key):
+        super().__init__(personal_acces_key, secret_access_key)
+
+    def initialize(self, inputPath, imageFileList, region = 'us-east-1'):
+        self.imageList = imageFileList
+        self.response = [self._get_response(inputPath, image, region) for image in self.imageList]
+
+
+    def _get_response(self, inputPath, imageFile, region):
+        return super().client(region = region).detect_labels(Image={
+            'Bytes': open(os.path.join(inputPath, imageFile),'rb').read()})
+
+
+
+    def get(self):
+        temp = []
+
+        for n in range(len(self.imageList)):
+        ## If no labels detected, still save the info:
+            if len(self.response[n]) == 0:
+                #print ("No Labels Detected")
+                temp_dict = {}
+                temp_dict["imageName"] = self.imageList[n]
+                temp_dict["objectID"] = None
+                temp_dict["ObjectName"] = None
+                temp_dict["objectConf"] = None
+                temp.append(temp_dict)   
+            
+            else:
+                
+                label_counter = 1
+                
+                for label in self.response[n]['Labels']:
+                    #print (label['Name'] + ' : ' + str(label['Confidence']))
+                    temp_dict = {}
+                    temp_dict["imageName"] = self.imageList[n]
+                    #temp_dict["full_detect_labels_response"] = response
+                    temp_dict["objectID"] = label_counter
+                    temp_dict["object"] = label['Name']
+                    temp_dict["objectConf"] = label['Confidence']
+                    if len(label['Parents']) != 0:
+                        temp_dict["parent"] = label['Parents'][0]['Name']
+                    else:
+                        temp_dict['parent'] = None
+                    label_counter +=1 # update for the next label
+                    temp.append(temp_dict)
+                    
+        return pd.DataFrame(temp)

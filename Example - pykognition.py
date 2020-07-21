@@ -27,13 +27,20 @@ _secret_access_key = _credentials['amazon']['secret_access_key']
 local_images = os.listdir(input_path)
 local_images = local_images[:5]
 
+
+
 fa = fd.ImageFaceAnalysis(_personal_access_key, _secret_access_key)
 
 fa.initialize(inputPath = input_path, imageFileList = local_images)
 
+expdf = fa.get(attributes = ['emotions'])
 
 
-df = fa.get(attributes = ['emotions'])
+
+imgA = fd.ImageObjectAnalysis(_personal_access_key, _secret_access_key)
+imgA.initialize(inputPath = input_path, imageFileList = local_images)
+
+objdf = imgA.get()
 
 
 

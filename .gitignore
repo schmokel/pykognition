@@ -2,3 +2,4 @@ facebookAccessTokenLocalCopy.txt
 Credentials.yaml
 /inputEmotions
 /outputEmotions
+01_aws_rekog_labels_example_py3.5.py
