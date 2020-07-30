@@ -31,9 +31,9 @@ class ImageFaceAnalysis(BaseImageDataHandler):
     
     
 
-    def initialize(self, inputPath, imageFileList, region = 'us-east-1'):
+    def initialize(self, imageFileList, region = 'us-east-1'):
         self.imageList = imageFileList
-        self.response = [self._get_response(inputPath, image, region) for image in self.imageList]
+        self.response = [self._get_response(image, region) for image in self.imageList]
 
     
     def get(self, attributes = []):
@@ -51,9 +51,9 @@ class ImageFaceAnalysis(BaseImageDataHandler):
 
     
         
-    def _get_response(self, inputPath, imageFile, region):
+    def _get_response(self, imageFile, region):
         return super().client(region = region).detect_faces(Image={
-            'Bytes': open(os.path.join(inputPath, imageFile), 'rb').read()}, Attributes = ['ALL'])
+            'Bytes': open(imageFile, 'rb').read()}, Attributes = ['ALL'])
         
 
    # def initialize(self, inputPath, imageFileList, region = 'us-east-1'):
@@ -227,14 +227,14 @@ class ImageObjectAnalysis(BaseImageDataHandler):
     def __init__(self, personal_acces_key, secret_access_key):
         super().__init__(personal_acces_key, secret_access_key)
 
-    def initialize(self, inputPath, imageFileList, region = 'us-east-1'):
+    def initialize(self, imageFileList, region = 'us-east-1'):
         self.imageList = imageFileList
-        self.response = [self._get_response(inputPath, image, region) for image in self.imageList]
+        self.response = [self._get_response(image, region) for image in self.imageList]
 
 
-    def _get_response(self, inputPath, imageFile, region):
+    def _get_response(self, imageFile, region):
         return super().client(region = region).detect_labels(Image={
-            'Bytes': open(os.path.join(inputPath, imageFile),'rb').read()})
+            'Bytes': open(imageFile,'rb').read()})
 
 
 
