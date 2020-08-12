@@ -11,7 +11,8 @@ import boto3
 import pandas as pd
 from functools import reduce
 import os 
-
+from PIL import Image, ImageDraw, ExifTags, ImageColor, ImageFont
+import re
 
 from .base import BaseImageDataHandler
 
@@ -28,6 +29,9 @@ class ImageFaceAnalysis(BaseImageDataHandler):
             "emotions": self._getEmotions,
             "age": self._getAge,
             'features': self._getFeatures}
+        self.imageList = None
+        self.response = None
+        
     
     
 
@@ -211,6 +215,60 @@ class ImageFaceAnalysis(BaseImageDataHandler):
     
     def _reduce_data(self, df_list, join_cols):
         return reduce(lambda left,right: pd.merge(left,right, on = join_cols), df_list)
+    
+
+    
+
+    def draw(self, outputPath, images = None):
+        #images = list of images (full path)
+        if images is None:
+            iterlist = self.imageList
+        else:
+            iterlist = images
+
+        clean_imageNames = [re.split(' |/|\\\\', pathNames)[-1] for pathNames in iterlist]
+
+        for imageFile in range(len(iterlist)):
+            with open(iterlist[imageFile], 'rb') as image:
+            
+                draw_image = Image.open(image)
+    
+                imgWidth, imgHeight = draw_image.size  
+                draw = ImageDraw.Draw(draw_image) 
+
+            for label in self.response[imageFile]['FaceDetails']:    
+                box = label['BoundingBox']
+                left = imgWidth * box['Left']
+                top = imgHeight * box['Top']
+                width = imgWidth * box['Width']
+                height = imgHeight * box['Height']
+                        
+                print('Left: ' + '{0:.0f}'.format(left))
+                print('Top: ' + '{0:.0f}'.format(top))
+                print('Face Width: ' + "{0:.0f}".format(width))
+                print('Face Height: ' + "{0:.0f}".format(height))
+                
+                points = (
+                    (left,top),
+                    (left + width, top),
+                    (left + width, top + height),
+                    (left , top + height),
+                    (left, top)
+                
+                )
+                
+                maxConfEmotion = max(label['Emotions'], key=lambda x:x['Confidence'])
+                draw.line(points, fill='#00d400', width=2)
+                usr_font = ImageFont.truetype("arial.ttf", 25)
+                text_position = (left, top)
+                box_label = maxConfEmotion['Type'] + '    ' + str(int(label['Confidence']))
+                draw.text(text_position, box_label, fill='RED', font = usr_font)
+
+            draw_image.save(outputPath + clean_imageNames[imageFile])
+        
+        
+            
+    
     
     
             

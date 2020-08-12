@@ -2,6 +2,7 @@ README.md
 setup.py
 pykognition/__init__.py
 pykognition/base.py
+pykognition/faceAnalysis.py
 pykognition/main.py
 pykognition.egg-info/PKG-INFO
 pykognition.egg-info/SOURCES.txt
