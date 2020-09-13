@@ -219,7 +219,25 @@ class ImageFaceAnalysis(BaseImageDataHandler):
 
     
 
-    def draw(self, outputPath, images = None):
+    def draw(self, outputPath, images = None, conf_threshold = 0, font_size = 16):
+        """
+        Returns boxes with face ID, emotions and confidence level
+
+
+        Parameters
+        ----------
+        outputPath: str
+            Folder location for images
+        images: str, optional, Default = None
+            choose subset of images by providing image-names. If none, takes all images as input
+        conf_threshold: int, optional, default = 0
+            Only draw boxes with confidence level above the threshold
+        font_size: int, optional, default = 16
+            Size of the font
+
+
+
+        """
         #images = list of images (full path)
         if images is None:
             iterlist = self.imageList
@@ -228,6 +246,7 @@ class ImageFaceAnalysis(BaseImageDataHandler):
 
         clean_imageNames = [re.split(' |/|\\\\', pathNames)[-1] for pathNames in iterlist]
 
+        
         for imageFile in range(len(iterlist)):
             with open(iterlist[imageFile], 'rb') as image:
             
@@ -235,18 +254,19 @@ class ImageFaceAnalysis(BaseImageDataHandler):
     
                 imgWidth, imgHeight = draw_image.size  
                 draw = ImageDraw.Draw(draw_image) 
-
-            for label in self.response[imageFile]['FaceDetails']:    
+            id_counter = 0
+            for label in self.response[imageFile]['FaceDetails']:  
+                id_counter += 1  
                 box = label['BoundingBox']
                 left = imgWidth * box['Left']
                 top = imgHeight * box['Top']
                 width = imgWidth * box['Width']
                 height = imgHeight * box['Height']
                         
-                print('Left: ' + '{0:.0f}'.format(left))
-                print('Top: ' + '{0:.0f}'.format(top))
-                print('Face Width: ' + "{0:.0f}".format(width))
-                print('Face Height: ' + "{0:.0f}".format(height))
+               # print('Left: ' + '{0:.0f}'.format(left))
+               # print('Top: ' + '{0:.0f}'.format(top))
+               # print('Face Width: ' + "{0:.0f}".format(width))
+               # print('Face Height: ' + "{0:.0f}".format(height))
                 
                 points = (
                     (left,top),
@@ -258,11 +278,16 @@ class ImageFaceAnalysis(BaseImageDataHandler):
                 )
                 
                 maxConfEmotion = max(label['Emotions'], key=lambda x:x['Confidence'])
-                draw.line(points, fill='#00d400', width=2)
-                usr_font = ImageFont.truetype("arial.ttf", 25)
-                text_position = (left, top)
-                box_label = maxConfEmotion['Type'] + '    ' + str(int(label['Confidence']))
-                draw.text(text_position, box_label, fill='RED', font = usr_font)
+
+                if int(maxConfEmotion['Confidence']) >= conf_threshold:
+                    draw.line(points, fill='#00d400', width=2)
+                    usr_font = ImageFont.truetype("arial.ttf", font_size)
+                    text_position = (left, top)
+                    box_label = "FID: {id}, {emotion}: {conf}".format(id = str(id_counter), emotion = maxConfEmotion['Type'], conf =  str(int(maxConfEmotion['Confidence'])))
+                    draw.text(text_position, box_label, fill='RED', font = usr_font)
+                    
+                else:
+                    continue
 
             draw_image.save(outputPath + clean_imageNames[imageFile])
         

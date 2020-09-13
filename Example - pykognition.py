@@ -30,7 +30,7 @@ for root, dirs, files in os.walk(_root + input_path):
             
             
 #local_images = os.listdir(input_path)
-#local_images = local_images[:5]
+local_images = [image for image in local_images if "123003499150370" in image]
 
 ifa = pykog.ImageFaceAnalysis(_personal_access_key, _secret_access_key)
 
@@ -40,8 +40,9 @@ ifa.initialize(imageFileList = local_images)
 ifa_df = ifa.get(attributes = ['emotions'])
 
 
+help(ifa.draw)
 out = r"C:/Users/rasmu/Documents/Repositories/pykognition/outputEmotions/"
-ifa.draw(outputPath = out)
+ifa.draw(outputPath = out, conf_threshold = 80, font_size = 24)
 
 #%%
 
