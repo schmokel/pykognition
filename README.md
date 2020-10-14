@@ -15,7 +15,7 @@ In terminal/CMD:
 
 Installing from  wheel-file
 ```bash
-pip install "dist/pykognition-0.0.16-py3-none-any.whl"
+pip install "dist/pykognition-0.1.0-py3-none-any.whl"
 ```
 
 Building from source:

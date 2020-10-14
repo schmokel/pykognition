@@ -1,2 +1,5 @@
-boto3 >= 1.14.23
-pandas >= 1.0.5
+boto3>=1.14.23
+pandas>=1.0.5
+requests>=2.24.0
+Pillow>=7.2.0
+sphinx_click

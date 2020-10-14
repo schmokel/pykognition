@@ -17,7 +17,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pykognition", 
-    version="0.0.16",
+    version="0.1.0",
     author="Rasmus H. Schmøkel",
     author_email="rasmusschmokel@gmail.com",
     description="A python module for conviently accessing AWS Rekognition API using python",
