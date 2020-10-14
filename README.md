@@ -35,9 +35,7 @@ You have now installed the pykognition
 
 ## Usage
 
-
-
-For futher help see the [documentation](docs/build/html/index.html)  
+For usage and further help see the [documentation](docs/build/html/index.html)  
 
 
 

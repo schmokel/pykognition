@@ -8,7 +8,7 @@ Created on Fri Apr 10 13:27:09 2020
 import yaml
 import pykognition as pykog
 import os
-
+import pandas as pd
 
 _root = os.getcwd()
 _ifa_datadir = os.path.join(_root, "inputEmotions", "")
@@ -18,7 +18,7 @@ _credentials = yaml.load(open(os.path.join(os.getcwd(), 'Credentials.yaml')))
 _personal_access_key = _credentials['amazon']['personal_access_key']
 _secret_access_key = _credentials['amazon']['secret_access_key']
 
-#T he simpler os.listdir           
+#The simpler os.listdir           
 #local_images = os.listdir(input_path)
 
 # or recursively reading files and files in subfolders in 'input_path'
@@ -54,6 +54,9 @@ ifa_df = ifa.get(attributes = ['emotions'])
 help(ifa.draw)
 out = _root + "/outputEmotions/"
 ifa.draw(outputPath = out, conf_threshold = 80, font_size = 24)
+
+#Saving the data to a spreadsheet, simply do:
+pd.to_csv(ifa.get(attributes = ['emotions', 'features', 'age']))
 
 #%%
 
