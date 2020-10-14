@@ -25,7 +25,7 @@ Example usage:
    _ifa_datadir = os.path.join(_root, "inputEmotions", "")
    input_path = "/inputEmotions"
    # reading credentials
-   _credentials = yaml.load(open(os.path.join(os.getcwd(), 'Credentials.yaml')))
+   _credentials = yaml.load(open(os.path.join(_root, 'Credentials.yaml')))
    _personal_access_key = _credentials['amazon']['personal_access_key']
    _secret_access_key = _credentials['amazon']['secret_access_key']
 
