@@ -1,7 +1,10 @@
 # pykognition
 Python wrapper for AWS Rekognition API
 
-Further description
+Pykognition is a Python wrapper for the Amazon Web Service (AWS) Rekognition API, which provides industry-grade face and emotion detection. 
+For facial detection, the algorithm provides a score for the predicted probability that the image includes a face (or multiple faces). Each face is categorized in a FaceDetail object, which carries a host of metadata such as predicted age, gender, and the emotion predicted to be displayed by each face. The emotion classifications provided by the algorithm are: Happy, Sad, Angry, Confused, Disgusted, Surprised, Calm, Fear, and Unknown. Each emotion classification is accompanied by a confidence score ranging up to 99.9%. 
+Pykognition simplifies the process of classifying images with the Rekognition API. Once the researcher establishes an AWS account, they only need to insert their access tokens and an input path where the images are stored. The ‘ifa’ function (short for Image Face Analysis) sends images for classification to the Rekognition API and returns both the classification  and metadata.
+
 
 ## Prerequisites
 * Python 3 (Is tested on 3.7 but might work on other versions)
