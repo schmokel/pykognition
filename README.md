@@ -15,11 +15,11 @@ Pykognition simplifies the process of classifying images with the Rekognition AP
 
 
 ## Installation
-In order to install the FbAdLibrarin you can either build from source or install via pip from the wheel distributable
+In order to install pykognition you can either build from source or install via pip from the wheel distributable.
 
 In terminal/CMD:
 
-Installing from  wheel-file
+Installing from  wheel-file:
 ```bash
 pip install "dist/pykognition-0.1.0-py3-none-any.whl"
 ```
@@ -30,12 +30,12 @@ Building from source:
 python setup.py install 
 ```
 
-You have now installed the pykognition 
+You have now installed pykognition! 
 
 
 ## Usage
 
-For usage and further help see the [documentation](https://pykognition.readthedocs.io/en/latest/)  
+For usage and further help see the [documentation](https://pykognition.readthedocs.io/en/latest/).
 
 
 
@@ -51,6 +51,6 @@ Please refer to the project's style for submitting patches and additions. In gen
 
 
 ## License
-pykognitionis published under the GNU General Public License v3.0  
-Read the license [here](LICENSE)
+pykognition is published under the GNU General Public License v3.0  
+Read the license [here](LICENSE).
 
